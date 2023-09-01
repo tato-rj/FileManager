@@ -17,8 +17,8 @@ class VideosController extends Controller
 
     public function upload(Request $request)
     {
-        return response(200);
-        
+        return ['foo' => 'bar'];
+
         $request->validate([
             'video' => 'required|mimes:mp4,mov,avi,webm,wmv',
             'email' => 'required|email',
