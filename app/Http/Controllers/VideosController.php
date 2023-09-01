@@ -17,6 +17,11 @@ class VideosController extends Controller
 
     public function upload(Request $request)
     {
+        if (\App::environment() == 'production') {
+            if ($request->pin != env('FILEMANAGER_SECRET'))
+                abort(404);
+        }
+
         return ['foo' => 'bar'];
 
         $request->validate([
