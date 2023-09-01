@@ -4,6 +4,7 @@
 /public/storage
 /storage/*.key
 /vendor
+pianolit-58e8261dd45e.json
 .env
 .env.backup
 .env.production

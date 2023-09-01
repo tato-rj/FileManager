@@ -24,17 +24,17 @@ class VideosController extends Controller
 
         return ['foo' => 'bar'];
 
-        $request->validate([
-            'video' => 'required|mimes:mp4,mov,avi,webm,wmv',
-            'email' => 'required|email',
-            'id' => 'required|integer'
-        ]);
+        // $request->validate([
+        //     'video' => 'required|mimes:mp4,mov,avi,webm,wmv',
+        //     'email' => 'required|email',
+        //     'id' => 'required|integer'
+        // ]);
 
-        ProcessVideo::dispatch(
-            Video::temporary($request->file('video'), $request->toArray())
-        );
+        // ProcessVideo::dispatch(
+        //     Video::temporary($request->file('video'), $request->toArray())
+        // );
 
-        return back();
+        // return back();
     }
 
     public function webhook(Video $video)
