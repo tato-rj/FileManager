@@ -23,7 +23,7 @@ class VideosController extends Controller
         // }
 
         $request->validate([
-
+            'video' => 'mimes:mp4,mov,avi,webm,wmv',
             'email' => 'required|email',
             'id' => 'required|integer'
         ]);
