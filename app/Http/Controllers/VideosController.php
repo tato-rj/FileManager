@@ -17,13 +17,14 @@ class VideosController extends Controller
 
     public function upload(Request $request)
     {
+        return phpinfo();
         // if (\App::environment() == 'production') {
         //     if ($request->pin != env('FILEMANAGER_SECRET'))
         //         abort(404);
         // }
 
         $request->validate([
-            'video' => 'mimes:mp4,mov,avi,webm,wmv',
+            'video' => 'required|mimes:mp4,mov,avi,webm,wmv',
             'email' => 'required|email',
             'id' => 'required|integer'
         ]);
