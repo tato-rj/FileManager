@@ -27,7 +27,7 @@ class VideosController extends Controller
             'email' => 'required|email',
             'id' => 'required|integer'
         ]);
-
+dd('here');
         ProcessVideo::dispatch(
             Video::temporary($request->file('video'), $request->toArray())
         );
