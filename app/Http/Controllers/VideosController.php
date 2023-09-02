@@ -22,11 +22,11 @@ class VideosController extends Controller
         //         abort(404);
         // }
 
-        $request->validate([
-            'video' => 'required|mimes:mp4,mov,avi,webm,wmv',
-            'email' => 'required|email',
-            'id' => 'required|integer'
-        ]);
+        // $request->validate([
+        //     'video' => 'required|mimes:mp4,mov,avi,webm,wmv',
+        //     'email' => 'required|email',
+        //     'id' => 'required|integer'
+        // ]);
 dd('here');
         ProcessVideo::dispatch(
             Video::temporary($request->file('video'), $request->toArray())
