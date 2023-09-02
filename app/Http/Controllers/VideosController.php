@@ -23,7 +23,7 @@ class VideosController extends Controller
         // }
 
         $request->validate([
-            'video' => 'required',
+
             'email' => 'required|email',
             'id' => 'required|integer'
         ]);
