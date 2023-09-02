@@ -21,13 +21,13 @@ class VideosController extends Controller
         //     if ($request->pin != env('FILEMANAGER_SECRET'))
         //         abort(404);
         // }
-return $request->all();
+
         $request->validate([
-            'video' => 'required|mimes:mp4,mov,avi,webm,wmv',
+            'video' => 'required',
             'email' => 'required|email',
             'id' => 'required|integer'
         ]);
-
+dd('here');
         ProcessVideo::dispatch(
             Video::temporary($request->file('video'), $request->toArray())
         );
