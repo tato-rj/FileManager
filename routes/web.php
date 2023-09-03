@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('', 'VideosController@index');
+Route::get('', 'VideosController@index')->name('home');
 
 Route::post('upload', 'VideosController@upload')->name('upload');
 
