@@ -19,7 +19,7 @@ class VideosController extends Controller
     {
         if (! \DB::table('personal_access_tokens')->where('name', $request->secret)->exists())
             throw new \Illuminate\Auth\Access\AuthorizationException('You are not authorized to do this');
-
+return $request->all();
         $request->validate([
             'video' => 'required|mimes:mp4,mov,avi,webm,wmv',
             'email' => 'required|email',
