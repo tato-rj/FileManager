@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 use App\Jobs\ProcessVideo;
-use App\Models\Video;
+use App\Models\{Video, User};
 
 class VideoTest extends TestCase
 {
@@ -27,6 +27,8 @@ class VideoTest extends TestCase
     /** @test */
     public function a_job_is_dispatched_when_a_user_uploads_a_video()
     {
+        $this->actingAs(User::factory()->create());
+
         $this->post(route('upload'), [
             'video' => UploadedFile::fake()->image('cover.mp4'),
             'email' => $this->faker->email,
