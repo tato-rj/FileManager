@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Jobs\ProcessVideo;
 use App\Models\Video;
+use Illuminate\Support\Facades\Validator;
 
 class VideosController extends Controller
 {
@@ -20,12 +21,20 @@ class VideosController extends Controller
         if (! \DB::table('personal_access_tokens')->where('name', $request->secret)->exists())
             throw new \Illuminate\Auth\Access\AuthorizationException('You are not authorized to do this');
 
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'video' => 'required|mimes:mp4,mov,avi,webm,wmv',
             'email' => 'required|email',
             'id' => 'required|integer'
         ]);
-return $request->all();
+
+        if ($validator->fails()) {
+            if ($request->wantsJson()) {
+                return 'foo';
+            } else {
+                return back()->withErrors($validator)->withInput();
+            }
+        }
+// return $request->all();
         ProcessVideo::dispatch(
             Video::temporary($request->file('video'), $request->toArray())
         );
