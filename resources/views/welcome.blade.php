@@ -3,7 +3,10 @@
 @section('content')
 @auth
 <div class="container mb-4">
-    <p><a href="{{config('filesystems.disks.gcs.bucketUrl')}}" target="_blank">See GCS bucket</a></p>
+    <div class="mb-3">
+        <a href="{{config('filesystems.disks.gcs.bucketUrl')}}" target="_blank">See GCS bucket</a> |
+        <a href="/horizon" target="_blank">Horizon dashboard</a>
+    </div>
 
     @include('record.create')
 </div>
