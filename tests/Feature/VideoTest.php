@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
@@ -11,7 +10,7 @@ use App\Models\{Video, User};
 
 class VideoTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use WithFaker;
 
     public function setUp() : void
     {
@@ -21,22 +20,33 @@ class VideoTest extends TestCase
         \Storage::fake('gcs');
         \Queue::fake();
 
+        $this->videoRequest = [
+            'secret' => env('FILEMANAGER_SECRET'),
+            'video' => UploadedFile::fake()->image('cover.mp4'),
+            'email' => $this->faker->email,
+            'id' => $this->faker->randomDigit
+        ];
+
         $this->setUpFaker();
     }
 
     /** @test */
     public function a_job_is_dispatched_when_a_user_uploads_a_video()
     {
-        $this->actingAs(User::factory()->create());
-
-        $this->post(route('upload'), [
-            'video' => UploadedFile::fake()->image('cover.mp4'),
-            'email' => $this->faker->email,
-            'id' => $this->faker->randomDigit
-        ]);
+        $this->post(route('upload'), $this->videoRequest);
 
         \Queue::assertPushed(function (ProcessVideo $job) {
             return $job->video->is(Video::first());
         });
+    }
+
+    /** @test */
+    public function api_requests_need_authentication()
+    {
+        $this->expectException('Illuminate\Auth\Access\AuthorizationException');
+        
+        array_shift($this->videoRequest);
+
+        $this->post(route('upload'), $this->videoRequest);
     }
 }

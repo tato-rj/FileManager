@@ -15,9 +15,19 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('', 'VideosController@index')->name('home');
 
-Route::middleware('auth')->post('upload', 'VideosController@upload')->name('upload');
+Route::middleware('api')->post('upload', 'VideosController@upload')->name('upload');
 
-Route::middleware('auth')->delete('{video}', 'VideosController@destroy')->name('delete');
+Route::middleware('api')->delete('{video}', 'VideosController@destroy')->name('delete');
+
+Route::prefix('tokens')->name('tokens.')->group(function() {
+
+	Route::get('', 'ApiTokensController@index')->name('index');
+
+	Route::post('', 'ApiTokensController@store')->name('store');
+
+	Route::delete('revoke', 'ApiTokensController@revoke')->name('revoke');
+
+});
 
 Route::prefix('webhook')->name('webhook.')->group(function() {
 

@@ -17,10 +17,8 @@ class VideosController extends Controller
 
     public function upload(Request $request)
     {
-        // if (\App::environment() == 'production') {
-        //     if ($request->pin != env('FILEMANAGER_SECRET'))
-        //         abort(404);
-        // }
+        if ($request->secret != env('FILEMANAGER_SECRET'))
+            throw new \Illuminate\Auth\Access\AuthorizationException('You are not authorized to do this');
 
         $request->validate([
             'video' => 'required|mimes:mp4,mov,avi,webm,wmv',

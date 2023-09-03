@@ -1,6 +1,7 @@
 <form method="POST" action="{{route('upload')}}" enctype="multipart/form-data">
     @csrf
 
+    <input type="hidden" name="secret" value="{{env('FILEMANAGER_SECRET')}}">
     <input type="hidden" name="email" value="test@email.com">
     <input type="hidden" name="id" value="1">
 

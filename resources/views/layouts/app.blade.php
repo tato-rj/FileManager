@@ -32,15 +32,22 @@
                 background-color: inherit;
                 color: inherit;
             }
+
+            .link-none,.link-none:hover {
+                color: inherit;
+                text-decoration: none;
+            }
         </style>
     </head>
     <body class="py-4">
         <div class="container mb-4">
             <div class="d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-baseline">
-                    <h1 class="border-bottom border-5 d-inline me-2">File Manager</h1>
-                    <h3 class="text-muted">for PianoLIT</h3>
-                </div>
+                <a class="link-none" href="{{route('home')}}">
+                    <div class="d-flex align-items-baseline">
+                        <h1 class="border-bottom border-5 d-inline me-2">File Manager</h1>
+                        <h3 class="text-muted">for PianoLIT</h3>
+                    </div>
+                </a>
 
                 <div>
                     @auth
@@ -78,4 +85,23 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
     </body>
+
+    <script type="text/javascript">
+$(function () {
+  $('[data-bs-toggle="tooltip"]').tooltip({trigger: 'manual'});
+})
+$('.clip').click(function(e) {
+    e.preventDefault();
+    let $element = $(this);
+    var text = $element.text();
+    var $temp = $('<textarea/>').val(text).appendTo('body');
+    $temp.select();
+    document.execCommand('copy');
+    $temp.remove();
+    $element.tooltip('show');
+    setTimeout(function() {
+        $element.tooltip('hide');
+    }, 500);
+});
+    </script>
 </html>

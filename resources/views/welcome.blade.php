@@ -4,6 +4,8 @@
 @auth
 <div class="container mb-4">
     <div class="mb-3">
+        <a href="{{route('tokens.index')}}">Api tokens</a>
+        |
         <a href="{{config('filesystems.disks.gcs.bucketUrl')}}" target="_blank">See GCS bucket</a>
         |
         <a href="/horizon" target="_blank">Horizon dashboard</a>
