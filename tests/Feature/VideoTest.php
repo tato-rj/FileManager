@@ -53,4 +53,14 @@ class VideoTest extends TestCase
 
         $this->post(route('upload'), $this->videoRequest);
     }
+
+    /** @test */
+    public function it_returns_validation_errors_in_json_to_api_requests()
+    {
+        array_pop($this->videoRequest);
+
+        $this->postJson(route('upload'), $this->videoRequest)->assertJson([
+            'id' => ['The id field is required.']
+        ]);
+    }
 }

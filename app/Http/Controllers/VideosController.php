@@ -29,7 +29,7 @@ class VideosController extends Controller
 
         if ($validator->fails()) {
             if ($request->wantsJson()) {
-                return response()->withErrors($validator);
+                return response()->json($validator->errors(), 422);
             } else {
                 return back()->withErrors($validator)->withInput();
             }
