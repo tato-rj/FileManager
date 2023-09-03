@@ -4,8 +4,13 @@
 @auth
 <div class="container mb-4">
     <div class="mb-3">
-        <a href="{{config('filesystems.disks.gcs.bucketUrl')}}" target="_blank">See GCS bucket</a> |
+        <a href="{{config('filesystems.disks.gcs.bucketUrl')}}" target="_blank">See GCS bucket</a>
+        |
         <a href="/horizon" target="_blank">Horizon dashboard</a>
+        @if(app()->environment() == 'local')
+        |
+        <a href="{{env('DROPLET_IP')}}" target="_blank">Live server</a>
+        @endif
     </div>
 
     @include('record.create')
