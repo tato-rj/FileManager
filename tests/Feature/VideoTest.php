@@ -20,8 +20,12 @@ class VideoTest extends TestCase
         \Storage::fake('gcs');
         \Queue::fake();
 
+        $this->actingAs(User::factory()->create());
+
+        auth()->user()->createToken('token');
+
         $this->videoRequest = [
-            'secret' => env('FILEMANAGER_SECRET'),
+            'secret' => auth()->user()->tokens->first()->name,
             'video' => UploadedFile::fake()->image('cover.mp4'),
             'email' => $this->faker->email,
             'id' => $this->faker->randomDigit
@@ -44,7 +48,7 @@ class VideoTest extends TestCase
     public function api_requests_need_authentication()
     {
         $this->expectException('Illuminate\Auth\Access\AuthorizationException');
-        
+
         array_shift($this->videoRequest);
 
         $this->post(route('upload'), $this->videoRequest);

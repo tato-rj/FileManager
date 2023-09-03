@@ -17,7 +17,7 @@ class VideosController extends Controller
 
     public function upload(Request $request)
     {
-        if ($request->secret != env('FILEMANAGER_SECRET'))
+        if (! \DB::table('personal_access_tokens')->where('name', $request->secret)->exists())
             throw new \Illuminate\Auth\Access\AuthorizationException('You are not authorized to do this');
 
         $request->validate([
