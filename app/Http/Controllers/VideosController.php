@@ -34,11 +34,14 @@ class VideosController extends Controller
                 return back()->withErrors($validator)->withInput();
             }
         }
-// return $request->all();
-        ProcessVideo::dispatch(
-            Video::temporary($request->file('video'), $request->toArray())
-        );
 
+        $video = Video::temporary($request->file('video'), $request->toArray());
+
+        ProcessVideo::dispatch($video);
+
+        if ($request->wantsJson())
+            return $video;
+        
         return back();
     }
 
