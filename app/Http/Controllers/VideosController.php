@@ -40,8 +40,8 @@ class VideosController extends Controller
         ProcessVideo::dispatch($video);
 
         if ($request->wantsJson())
-            return $video;
-        
+            return $video->toArray();
+
         return back();
     }
 
