@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('user_id');
+            $table->unsignedInteger('piece_id');
             $table->string('user_email');
             $table->string('temp_path')->nullable();
             $table->string('video_path')->nullable();

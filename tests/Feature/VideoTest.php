@@ -28,7 +28,8 @@ class VideoTest extends TestCase
             'secret' => auth()->user()->tokens->first()->name,
             'video' => UploadedFile::fake()->image('cover.mp4'),
             'email' => $this->faker->email,
-            'id' => $this->faker->randomDigit
+            'user_id' => $this->faker->randomDigit,
+            'piece_id' => $this->faker->randomDigit
         ];
 
         $this->setUpFaker();
@@ -60,7 +61,7 @@ class VideoTest extends TestCase
         array_pop($this->videoRequest);
 
         $this->postJson(route('upload'), $this->videoRequest)->assertJson([
-            'id' => ['The id field is required.']
+            'piece_id' => ['The piece id field is required.']
         ]);
     }
 }

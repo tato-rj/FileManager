@@ -52,7 +52,8 @@ class Video extends Model
     public function scopeTemporary($query, UploadedFile $file, array $request)
     {
         return $query->create([
-            'user_id' => $request['id'],
+            'piece_id' => $request['piece_id'],
+            'user_id' => $request['user_id'],
             'user_email' => $request['email'],
             'temp_path' => \Storage::disk('public')->put('temporary', $file),
             'original_size' => $file->getSize()

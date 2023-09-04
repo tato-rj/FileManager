@@ -24,7 +24,8 @@ class VideosController extends Controller
         $validator = Validator::make($request->all(), [
             'video' => 'required|mimes:mp4,mov,avi,webm,wmv',
             'email' => 'required|email',
-            'id' => 'required|integer'
+            'user_id' => 'required|integer',
+            'piece_id' => 'required|integer'
         ]);
 
         if ($validator->fails()) {
@@ -39,9 +40,6 @@ class VideosController extends Controller
             Video::temporary($request->file('video'), $request->toArray())
         );
 
-        if ($request->wantsJson())
-            return 'foo';
-        
         return back();
     }
 
