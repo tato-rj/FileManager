@@ -35,12 +35,12 @@ class VideosController extends Controller
             }
         }
 
-        $video = Video::temporary($request->file('video'), $request->toArray());
-
-        ProcessVideo::dispatch($video);
+        ProcessVideo::dispatch(
+            Video::temporary($request->file('video'), $request->toArray())
+        );
 
         if ($request->wantsJson())
-            return $video;
+            return 'foo';
         
         return back();
     }
