@@ -35,3 +35,24 @@
 </div>
 @endauth
 @endsection
+
+@push('scripts')
+<script type="text/javascript">
+    $(function () {
+        $('[data-bs-toggle="tooltip"]').tooltip({trigger: 'manual'});
+    })
+    $('.clip').click(function(e) {
+        e.preventDefault();
+        let $element = $(this);
+        var text = $element.text();
+        var $temp = $('<textarea/>').val(text).appendTo('body');
+        $temp.select();
+        document.execCommand('copy');
+        $temp.remove();
+        $element.tooltip('show');
+        setTimeout(function() {
+            $element.tooltip('hide');
+        }, 500);
+    });
+</script>
+@endpush

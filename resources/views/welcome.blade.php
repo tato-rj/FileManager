@@ -33,3 +33,12 @@
 </div>
 @endauth
 @endsection
+
+@push('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/resumable.js/1.0.3/resumable.min.js"></script>
+
+<script type="text/javascript">
+var resumable = new Resumable();
+console.log(resumable);
+</script>
+@endpush
