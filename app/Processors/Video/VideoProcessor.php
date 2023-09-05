@@ -6,18 +6,29 @@ use App\Models\Video;
 
 class VideoProcessor
 {
-	public $temp_path, $filename, $withThumbnail;
+	protected $raw_file;
+	public $temp_path, $filename, $withThumbnail, $originalDimensions;
 
 	public function __construct(Video $video)
 	{
 		$this->video = $video;
 		$this->filename = basename($video->temp_path);
 		$this->withThumbnail = false;
+		$this->raw_file = \FFMpeg::fromDisk('public')->open($this->video->temp_path);
+		
+		$this->getOriginalDimensions();
 	}
 
 	public function rawFile()
 	{
-		return \FFMpeg::fromDisk('public')->open($this->video->temp_path);
+		return $this->raw_file;
+	}
+
+	public function getOriginalDimensions()
+	{
+		$copy = $this->raw_file;
+
+		$this->originalDimensions = $copy->getVideoStream()->getDimensions();
 	}
 
 	public function path()

@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Queue\Events\JobProcessed;
+use App\Models\Video;
 
 class VideoServiceProvider extends ServiceProvider
 {
@@ -16,10 +17,15 @@ class VideoServiceProvider extends ServiceProvider
     public function boot()
     {
         Queue::after(function (JobProcessed $event) {
-            // \App\Models\Video::first()->update(['user_email' => 'it@works']);
-            // $event->connectionName
-            // $event->job
-            // $event->job->payload()
+            try {
+                $tag = $event->job->payload()['tags'][0];
+                
+                \Log::debug('Sending notification back to PianoLIT');
+
+                Video::fromTag($tag)->sendNotification();
+            } catch (Exception $e) {
+                bugsnag();
+            }
         });
     }
 }

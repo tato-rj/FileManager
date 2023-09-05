@@ -3,6 +3,7 @@
 
     <input type="hidden" name="secret" value="{{auth()->user()->tokens()->exists() ? auth()->user()->tokens->first()->name : null}}">
     <input type="hidden" name="email" value="test@email.com">
+    <input type="hidden" name="origin" value="local">
     <input type="hidden" name="user_id" value="1">
     <input type="hidden" name="piece_id" value="1">
 

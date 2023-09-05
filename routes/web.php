@@ -15,9 +15,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('', 'VideosController@index')->name('home');
 
-Route::middleware('api')->post('upload', 'VideosController@upload')->name('upload');
+Route::middleware('api.token')->post('upload', 'VideosController@upload')->name('upload');
 
-Route::middleware('api')->delete('{video}', 'VideosController@destroy')->name('delete');
+Route::middleware('api.token')->delete('delete', 'VideosController@destroy')->name('delete');
 
 Route::prefix('tokens')->name('tokens.')->group(function() {
 
@@ -31,6 +31,6 @@ Route::prefix('tokens')->name('tokens.')->group(function() {
 
 Route::prefix('webhook')->name('webhook.')->group(function() {
 
-	Route::get('{video}', 'VideosController@webhook')->name('show');
+	Route::post('{video}', 'WebhookController@resend')->name('resend');
 
 });

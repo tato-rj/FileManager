@@ -12,8 +12,13 @@ class Video extends Model
     use HasFactory;
 
     protected $guarded = [];
-    protected $dates = ['completed_at'];
+    protected $dates = ['completed_at', 'notification_received_at'];
     protected $appends = ['video_url', 'thumb_url'];
+
+    public function getNotificationUrlAttribute()
+    {
+        return env('PIANOLIT_NOTIFICATION_URL');
+    }
 
     public function getVideoUrlAttribute()
     {
@@ -49,9 +54,57 @@ class Video extends Model
             return gmdate('i:s', $this->completed_at->diffInSeconds($this->created_at));
     }
 
+    public function getOriginIconAttribute()
+    {
+        switch ($this->origin) {
+            case 'webapp':
+                return 'fas fa-laptop';
+                break;
+
+            case 'ios':
+                return 'fab fa-apple';
+                break;
+
+            case 'android':
+                return 'fas fa-mobile';
+                break;
+
+            default:
+                return $this->origin ?? 'question';
+                break;
+        }
+    }
+
+    public function sendNotification()
+    {
+        if (! in_array($this->origin, ['webapp', 'ios']))
+            return nulll;
+
+        $response = \Http::post($this->notification_url, ['video' => $this->toArray()]);
+
+        if ($response->successful())
+            $this->update(['notification_received_at' => now()]);
+
+        return $response;
+    }
+
+    public function scopeFromTag($query, $tag)
+    {
+        $pieces = explode(':', $tag);
+
+        $class = $pieces[0];
+        $id = $pieces[1];
+
+        if ($class != get_class($this))
+            abort(404, 'This job was not for a Video');
+
+        return $query->find($id);
+    }
+
     public function scopeTemporary($query, UploadedFile $file, array $request)
     {
         return $query->create([
+            'origin' => $request['origin'],
             'piece_id' => $request['piece_id'],
             'user_id' => $request['user_id'],
             'user_email' => $request['email'],
@@ -74,10 +127,5 @@ class Video extends Model
             'mimeType' => \Storage::disk('gcs')->mimeType($processor->path()->video()),
             'completed_at' => now()
         ]);        
-    }
-
-    public function webhook()
-    {
-        return $this->toArray();
     }
 }

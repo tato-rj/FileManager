@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Jobs\ProcessVideo;
 use App\Models\Video;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Redis;
 
 class VideosController extends Controller
 {
@@ -18,14 +19,12 @@ class VideosController extends Controller
 
     public function upload(Request $request)
     {
-        if (! \DB::table('personal_access_tokens')->where('name', $request->secret)->exists())
-            throw new \Illuminate\Auth\Access\AuthorizationException('You are not authorized to do this');
-
         $validator = Validator::make($request->all(), [
             'video' => 'required|mimes:mp4,mov,avi,webm,wmv',
             'email' => 'required|email',
             'user_id' => 'required|integer',
-            'piece_id' => 'required|integer'
+            'piece_id' => 'required|integer',
+            'origin' => 'required|string'
         ]);
 
         if ($validator->fails()) {
@@ -43,13 +42,10 @@ class VideosController extends Controller
         return back();
     }
 
-    public function webhook(Video $video)
+    public function destroy(Request $request)
     {
-        return $video->webhook();
-    }
+        $video = Video::where(['user_id' => $request->user_id, 'piece_id' => $request->piece_id])->firstOrFail();
 
-    public function destroy(Video $video)
-    {
         if ($video->temp_path && \Storage::disk('public')->exists($video->temp_path))
             \Storage::disk('public')->delete($video->temp_path);
 
@@ -61,6 +57,6 @@ class VideosController extends Controller
 
         $video->delete();
 
-        return back();
+        return $request->wantsJson() ? response(200) : back();
     }
 }

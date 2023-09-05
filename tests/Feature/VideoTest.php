@@ -26,6 +26,7 @@ class VideoTest extends TestCase
 
         $this->videoRequest = [
             'secret' => auth()->user()->tokens->first()->name,
+            'origin' => 'test',
             'video' => UploadedFile::fake()->image('cover.mp4'),
             'email' => $this->faker->email,
             'user_id' => $this->faker->randomDigit,

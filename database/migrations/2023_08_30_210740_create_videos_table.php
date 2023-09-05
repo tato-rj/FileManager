@@ -15,8 +15,9 @@ return new class extends Migration
     {
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id');
+            $table->string('origin');
             $table->unsignedInteger('piece_id');
+            $table->unsignedInteger('user_id');
             $table->string('user_email');
             $table->string('temp_path')->nullable();
             $table->string('video_path')->nullable();
@@ -25,6 +26,7 @@ return new class extends Migration
             $table->unsignedInteger('original_size')->nullable();
             $table->unsignedInteger('compressed_size')->nullable();
             $table->timestamp('completed_at')->nullable();
+            $table->timestamp('notification_received_at')->nullable();
             $table->timestamps();
         });
     }

@@ -1,10 +1,15 @@
 <div class="accordion-item">
     <div class="accordion-header alert-success">
-      <button class="accordion-button collapsed alert-success" type="button" data-bs-toggle="collapse" data-bs-target="#record-{{$video->id}}">@fa(['icon' => 'check']){{$video->created_at->toFormattedDateString()}} | {{$video->user_email}}</button>
+      <button class="accordion-button collapsed alert-success" type="button" data-bs-toggle="collapse" data-bs-target="#record-{{$video->id}}">
+        @fa(['icon' => 'check'])
+        @include('record.states.header')
+      </button>
     </div>
     <div id="record-{{$video->id}}" class="accordion-collapse collapse" data-bs-parent="#records-container">
       <div class="accordion-body">
         <div class="text-muted small mb-2">
+            <label class="fw-bold">NOTIFICATION STATUS</label>
+            <div>{{$video->notification_received_at ? 'Last received on '.$video->notification_received_at->toFormattedDateString() : 'Not received yet'}}</div>
             <label class="fw-bold">PROCESSING TIME</label>
             <div>{{$video->processing_time}} minutes</div>
             <label class="fw-bold">MIME TYPE</label>
@@ -16,17 +21,16 @@
         </div>
 
         <div class="d-flex">
-                <a href="{{$video->video_url}}" target="_blank" class="btn btn-outline-primary btn-sm me-2">Video</a>
+          <a href="{{$video->video_url}}" target="_blank" class="btn btn-outline-primary btn-sm me-2">Video</a>
 
-                <a href="{{$video->thumb_url}}" target="_blank" class="btn btn-outline-primary btn-sm me-2">Thumbnail</a>
+          <a href="{{$video->thumb_url}}" target="_blank" class="btn btn-outline-primary btn-sm me-2">Thumbnail</a>
 
-                <a href="{{route('webhook.show', $video)}}" target="_blank" class="btn btn-outline-primary btn-sm me-2">JSON</a>
+          <form method="POST" action="{{route('webhook.resend', $video)}}" class="me-2">
+            @csrf
+            <button type="submit" class="btn btn-warning btn-sm">RESEND WEBHOOK</button>
+          </form>
 
-                <form action="{{route('delete', $video)}}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                </form>
+          @include('record.delete')
         </div>
       </div>
     </div>

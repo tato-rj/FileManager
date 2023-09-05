@@ -38,7 +38,5 @@ class ProcessVideo implements ShouldQueue
         $this->video->finish(
             (new VideoProcessor($this->video))->withThumbnail()->run()
         );
-
-        \Http::post('http://pianolit.test/file-manager', $this->video->webhook());
     }
 }
