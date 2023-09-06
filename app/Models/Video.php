@@ -75,10 +75,15 @@ class Video extends Model
         }
     }
 
+    public function isRemote()
+    {
+        return in_array($this->origin, ['webapp', 'ios']);
+    }
+
     public function sendNotification()
     {
-        if (! in_array($this->origin, ['webapp', 'ios']))
-            return nulll;
+        if (! $this->isRemote())
+            return null;
 
         $response = \Http::post($this->notification_url, ['video' => $this->toArray()]);
 
@@ -101,7 +106,7 @@ class Video extends Model
         return $query->find($id);
     }
 
-    public function scopeTemporary($query, UploadedFile $file, array $request)
+    public function scopeTemporary($query, $file, array $request)
     {
         return $query->create([
             'origin' => $request['origin'],

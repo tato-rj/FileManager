@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Jobs\ProcessVideo;
 use App\Models\Video;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Redis;
+use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
+use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
 
 class VideosController extends Controller
 {
@@ -20,7 +21,7 @@ class VideosController extends Controller
     public function upload(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'video' => 'required|mimes:mp4,mov,avi,webm,wmv',
+            // 'file' => 'required|mimes:mp4,mov,avi,webm,wmv',
             'email' => 'required|email',
             'user_id' => 'required|integer',
             'piece_id' => 'required|integer',
@@ -35,11 +36,36 @@ class VideosController extends Controller
             }
         }
 
-        ProcessVideo::dispatch(
-            Video::temporary($request->file('video'), $request->toArray())
-        );
+        $receiver = new FileReceiver('file', $request, HandlerFactory::classFromRequest($request));
 
-        return back();
+        if (!$receiver->isUploaded()) {
+            // file not uploaded
+        }
+
+        $fileReceived = $receiver->receive();
+
+        if ($fileReceived->isFinished()) {
+            $file = $fileReceived->getFile();
+
+            ProcessVideo::dispatch(
+                Video::temporary($file, $request->toArray())
+            );
+
+            unlink($file->getPathname());
+
+            return response(200);
+        }
+
+        return [
+            'done' => $fileReceived->handler()->getPercentageDone(),
+            'status' => true
+        ];
+
+        // ProcessVideo::dispatch(
+        //     Video::temporary($request->file('video'), $request->toArray())
+        // );
+
+        // return back();
     }
 
     public function destroy(Request $request)

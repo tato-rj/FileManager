@@ -38,7 +38,65 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/resumable.js/1.0.3/resumable.min.js"></script>
 
 <script type="text/javascript">
-var resumable = new Resumable();
-console.log(resumable);
+let uploadButton = $('#upload-button');
+let resumable = new Resumable({
+    target: '{{ route('upload') }}',
+    query:{
+        _token:'{{ csrf_token() }}',
+        secret:'{{auth()->user()->tokens->first()->name}}',
+        origin: 'local',
+        user_id: 1,
+        piece_id: 1,
+        email: 'test@email.com'
+    },
+    fileType: ['mp4', 'MOV'],
+    maxFileSize: 500000000,
+    headers: {
+        'Accept' : 'application/json'
+    },
+    testChunks: false,
+    throttleProgressCallbacks: 1,
+});
+
+resumable.assignBrowse(uploadButton[0]);
+resumable.on('fileAdded', function (file) {
+    showProgress();
+    uploadButton.prop('disabled', true);
+    resumable.upload();
+});
+
+resumable.on('fileProgress', function (file) {
+    updateProgress(Math.floor(file.progress() * 100));
+});
+
+resumable.on('fileSuccess', function (file, response) {
+    console.log('Finished upload');
+
+    setTimeout(function() {
+        location.reload();
+    }, 2000);
+});
+
+resumable.on('fileError', function (file, response) {
+    console.log(response);
+    alert('File uploading error.');
+});
+</script>
+<script type="text/javascript">
+let progress = $('.progress');
+function showProgress() {
+    progress.find('.progress-bar').css('width', '0%');
+    progress.find('.progress-bar').html('0%');
+    progress.find('.progress-bar').removeClass('bg-success');
+    progress.show();
+}
+function updateProgress(value) {
+    progress.find('.progress-bar').css('width', `${value}%`);
+    progress.find('.progress-bar').html(`${value}%`);
+}
+
+function hideProgress() {
+    progress.hide();
+}
 </script>
 @endpush
