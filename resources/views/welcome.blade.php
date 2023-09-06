@@ -43,7 +43,7 @@ let resumable = new Resumable({
     target: '{{ route('upload') }}',
     query:{
         _token:'{{ csrf_token() }}',
-        secret:'{{auth()->user()->tokens->first()->name}}',
+        secret:'{{auth()->user()->tokens()->exists() ? auth()->user()->tokens->first()->name : null}}',
         origin: 'local',
         user_id: 1,
         piece_id: 1,
