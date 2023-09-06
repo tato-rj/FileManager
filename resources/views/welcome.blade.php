@@ -36,7 +36,7 @@
 
 @push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/resumable.js/1.0.3/resumable.min.js"></script>
-
+@auth
 <script type="text/javascript">
 let uploadButton = $('#upload-button');
 let resumable = new Resumable({
@@ -99,4 +99,5 @@ function hideProgress() {
     progress.hide();
 }
 </script>
+@endauth
 @endpush
