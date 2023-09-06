@@ -11,6 +11,7 @@ class VideoProcessor
 
 	public function __construct(Video $video)
 	{
+		set_time_limit(0);
 		$this->video = $video;
 		$this->filename = basename($video->temp_path);
 		$this->withThumbnail = false;
