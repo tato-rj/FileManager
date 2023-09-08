@@ -38,7 +38,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/resumable.js/1.0.3/resumable.min.js"></script>
 @auth
 <script type="text/javascript">
-let uploadButton = $('#upload-button');
+let $uploadButton = $('#choose-video');
+let $confirmModal = $('#confirm-modal');
+let $confirmButton = $('#confirm-button');
 let resumable = new Resumable({
     target: '{{ route('upload') }}',
     query:{
@@ -58,11 +60,18 @@ let resumable = new Resumable({
     throttleProgressCallbacks: 1,
 });
 
-resumable.assignBrowse(uploadButton[0]);
+resumable.assignBrowse($uploadButton[0]);
+
+$confirmButton.on('click', function() {
+    if (resumable.files.length) {
+        $(this).prop('disabled', true);
+        resumable.upload();
+    }
+});
+
 resumable.on('fileAdded', function (file) {
     showProgress();
-    uploadButton.prop('disabled', true);
-    resumable.upload();
+    $confirmModal.modal('show');
 });
 
 resumable.on('fileProgress', function (file) {

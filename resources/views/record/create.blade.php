@@ -1,8 +1,24 @@
-<button type="submit" id="upload-button" class="btn btn-primary">Upload video</button>
+<button type="button" id="choose-video" class="btn btn-primary">
+  Choose video
+</button>
 
-<div class="progress mt-3" style="height: 25px">
-    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%; height: 100%"></div>
+<div class="modal fade" id="confirm-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <div class="modal-title fs-5" id="exampleModalLabel">Confirm upload</div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="progress mb-3" style="height: 25px">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%; height: 100%"></div>
+        </div>
+        <button type="submit" id="confirm-button" class="btn btn-primary">Upload video</button>
+      </div>
+    </div>
+  </div>
 </div>
+
 {{-- <form method="POST" action="{{route('upload')}}" enctype="multipart/form-data">
     @csrf
 
