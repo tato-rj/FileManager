@@ -43,6 +43,8 @@
                 text-decoration: none;
             }
         </style>
+
+        @stack('header')
     </head>
     <body class="py-4">
         <div class="container mb-4">

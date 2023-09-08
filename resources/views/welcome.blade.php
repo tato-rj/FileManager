@@ -1,5 +1,19 @@
 @extends('layouts.app')
 
+@push('header')
+<style type="text/css">
+.screen-lock-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 10000;
+  width: 100%;
+  height: 100vh;
+}
+</style>
+@endpush
+
 @section('content')
 @auth
 <div class="container mb-4">
@@ -31,6 +45,8 @@
 
     {{$videos->links()}}
 </div>
+
+@include('record.overlay')
 @endauth
 @endsection
 
@@ -38,6 +54,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/resumable.js/1.0.3/resumable.min.js"></script>
 @auth
 <script type="text/javascript">
+let $progressBar = $('.progress-bar');
+let $uploadOverlay = $('#upload-overlay');
 let $uploadButton = $('#choose-video');
 let $confirmModal = $('#confirm-modal');
 let $confirmButton = $('#confirm-button');
@@ -66,6 +84,7 @@ $confirmButton.on('click', function() {
     if (resumable.files.length) {
         $(this).prop('disabled', true);
         resumable.upload();
+        $uploadOverlay.show();
     }
 });
 
@@ -79,11 +98,13 @@ resumable.on('fileProgress', function (file) {
 });
 
 resumable.on('fileSuccess', function (file, response) {
-    console.log('Finished upload');
-
     setTimeout(function() {
-        location.reload();
-    }, 2000);
+        $progressBar.removeClass('progress-bar-striped progress-bar-animated').addClass('bg-success').text('DONE!');
+
+        setTimeout(function() {
+            location.reload();
+        }, 2000);
+    }, 1000);
 });
 
 resumable.on('fileError', function (file, response) {
