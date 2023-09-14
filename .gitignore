@@ -3,7 +3,9 @@
 /public/hot
 /public/storage
 /storage/*.key
+/storage/.DS_Store
 /vendor
+.DS_Store
 pianolit-03182f7c85e8.json
 .env
 .env.backup
