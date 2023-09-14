@@ -8,10 +8,8 @@
     <div id="record-{{$video->id}}" class="accordion-collapse collapse" data-bs-parent="#records-container">
       <div class="accordion-body">
         <div class="text-muted small mb-2">
-          @if($video->isRemote())
             <label class="fw-bold">NOTIFICATION STATUS</label>
-            <div>{{$video->notification_received_at ? 'Last received on '.$video->notification_received_at->toFormattedDateString() : 'Not received yet'}}</div>
-          @endif
+            <div class="{{$video->notification_received_at ? 'text-success' : 'text-danger'}}">{{$video->notification_received_at ? 'Last sent on '.$video->notification_received_at->toFormattedDateString() : 'Not received yet'}}</div>
             <label class="fw-bold">PROCESSING TIME</label>
             <div>{{$video->processing_time}} minutes</div>
             <label class="fw-bold">MIME TYPE</label>
@@ -27,12 +25,10 @@
 
           <a href="{{$video->thumb_url}}" target="_blank" class="btn btn-outline-primary btn-sm me-2">Thumbnail</a>
 
-          @if($video->isRemote())
           <form method="POST" action="{{route('webhook.resend', $video)}}" class="me-2">
             @csrf
             <button type="submit" class="btn btn-warning btn-sm">RESEND WEBHOOK</button>
           </form>
-          @endif
 
           @include('record.delete')
         </div>

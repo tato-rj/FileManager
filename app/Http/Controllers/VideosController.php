@@ -21,7 +21,7 @@ class VideosController extends Controller
     public function upload(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            // 'file' => 'required|mimes:mp4,mov,avi,webm,wmv',
+            'file' => 'required',
             'email' => 'required|email',
             'user_id' => 'required|integer',
             'piece_id' => 'required|integer',
@@ -38,8 +38,8 @@ class VideosController extends Controller
 
         $receiver = new FileReceiver('file', $request, HandlerFactory::classFromRequest($request));
 
-        if (!$receiver->isUploaded()) {
-            // file not uploaded
+        if (! $receiver->isUploaded()) {
+            \Log::debug('File not uploaded');
         }
 
         $fileReceived = $receiver->receive();
@@ -60,17 +60,13 @@ class VideosController extends Controller
             'done' => $fileReceived->handler()->getPercentageDone(),
             'status' => true
         ];
-
-        // ProcessVideo::dispatch(
-        //     Video::temporary($request->file('video'), $request->toArray())
-        // );
-
-        // return back();
     }
 
     public function destroy(Request $request)
     {
         $video = Video::where(['user_id' => $request->user_id, 'piece_id' => $request->piece_id])->firstOrFail();
+
+        $video->sendVideoDeletedNotification();
 
         if ($video->temp_path && \Storage::disk('public')->exists($video->temp_path))
             \Storage::disk('public')->delete($video->temp_path);

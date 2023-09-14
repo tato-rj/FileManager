@@ -18,11 +18,13 @@ class VideoServiceProvider extends ServiceProvider
     {
         Queue::after(function (JobProcessed $event) {
             try {
-                $tag = $event->job->payload()['tags'][0];
-                
-                \Log::debug('Sending notification back to PianoLIT');
+                $video = Video::fromTag(
+                    $event->job->payload()['tags'][0]
+                );
 
-                Video::fromTag($tag)->sendNotification();
+                \Log::debug('Sending notification back to PianoLIT for video ID: '.$video->id);
+
+                $video->sendJobProcessedNotification();
             } catch (Exception $e) {
                 bugsnag();
             }

@@ -9,7 +9,7 @@ class WebhookController extends Controller
 {
     public function resend(Video $video)
     {
-        $response = $video->sendNotification();
+        $response = $video->sendJobProcessedNotification();
 
         if ($response->ok())
             return back()->with('success', 'The notification was successfully received');

@@ -94,15 +94,18 @@ resumable.on('fileAdded', function (file) {
 });
 
 resumable.on('fileProgress', function (file) {
+    console.log(file);
     updateProgress(Math.floor(file.progress() * 100));
 });
 
 resumable.on('fileSuccess', function (file, response) {
+    console.log(file);
+    console.log(response);
     setTimeout(function() {
         $progressBar.removeClass('progress-bar-striped progress-bar-animated').addClass('bg-success').text('DONE!');
 
         setTimeout(function() {
-            location.reload();
+            // location.reload();
         }, 2000);
     }, 1000);
 });
@@ -110,6 +113,10 @@ resumable.on('fileSuccess', function (file, response) {
 resumable.on('fileError', function (file, response) {
     console.log(response);
     alert('File uploading error.');
+});
+
+$confirmModal.on('hidden.bs.modal', function() {
+    resumable.cancel();
 });
 </script>
 <script type="text/javascript">

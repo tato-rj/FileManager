@@ -37,16 +37,6 @@ class VideoTest extends TestCase
     }
 
     /** @test */
-    public function a_job_is_dispatched_when_a_user_uploads_a_video()
-    {
-        $this->post(route('upload'), $this->videoRequest);
-
-        \Queue::assertPushed(function (ProcessVideo $job) {
-            return $job->video->is(Video::first());
-        });
-    }
-
-    /** @test */
     public function api_requests_need_authentication()
     {
         $this->expectException('Illuminate\Auth\Access\AuthorizationException');

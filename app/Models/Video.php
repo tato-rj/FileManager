@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use App\Processors\Video\VideoProcessor;
+use App\Models\Traits\CallsPianolit;
 
 class Video extends Model
 {
-    use HasFactory;
+    use HasFactory, CallsPianolit;
 
     protected $guarded = [];
     protected $dates = ['completed_at', 'notification_received_at'];
@@ -22,12 +23,14 @@ class Video extends Model
 
     public function getVideoUrlAttribute()
     {
-        return \Storage::disk('gcs')->url($this->video_path);
+        if ($this->video_path)
+            return \Storage::disk('gcs')->url($this->video_path);
     }
 
     public function getThumbUrlAttribute()
     {
-        return \Storage::disk('gcs')->url($this->thumb_path);
+        if ($this->thumb_path)
+            return \Storage::disk('gcs')->url($this->thumb_path);
     }
 
     public function getOriginalSizeMbAttribute()
@@ -78,19 +81,6 @@ class Video extends Model
     public function isRemote()
     {
         return in_array($this->origin, ['webapp', 'ios']);
-    }
-
-    public function sendNotification()
-    {
-        if (! $this->isRemote())
-            return null;
-
-        $response = \Http::post($this->notification_url, ['video' => $this->toArray()]);
-
-        if ($response->successful())
-            $this->update(['notification_received_at' => now()]);
-
-        return $response;
     }
 
     public function scopeFromTag($query, $tag)
