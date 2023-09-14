@@ -105,7 +105,7 @@ resumable.on('fileSuccess', function (file, response) {
         $progressBar.removeClass('progress-bar-striped progress-bar-animated').addClass('bg-success').text('DONE!');
 
         setTimeout(function() {
-            // location.reload();
+            location.reload();
         }, 2000);
     }, 1000);
 });
